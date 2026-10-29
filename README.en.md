@@ -2,8 +2,8 @@
 
 [한국어](README.md) | **English**
 
-A macOS menu bar app that turns your AirPods into a mouse. The motion sensors in AirPods 4 (and other head-tracking
-AirPods: Pro / 3rd gen / Max) move the cursor. You click with head gestures, stem presses, or shortcuts, and you can
+A macOS menu bar app that turns your AirPods into a mouse. The motion sensors in head-tracking AirPods
+(AirPods 3rd gen and later · AirPods Pro · AirPods Max) move the cursor. You click with head gestures, stem presses, or shortcuts, and you can
 code by voice in Claude Code or Codex.
 
 <p align="center">
@@ -29,8 +29,29 @@ code by voice in Claude Code or Codex.
 ## Requirements
 
 - macOS 14 (Sonoma) or later
-- AirPods with head tracking (AirPods 4 / AirPods 3rd gen / AirPods Pro / AirPods Max)
+- AirPods with head tracking (see [Supported devices](#supported-devices))
+- A Mac with Apple silicon is recommended (Intel Macs haven't been tested)
 - Xcode or the Command Line Tools (`swiftc`). There's no Xcode project; `build.sh` builds everything.
+
+## Supported devices
+
+PodMouse reads sensor data through Apple's headphone motion API (`CMHeadphoneMotionManager`, macOS 14 and later).
+This API only provides data for **devices that support Spatial Audio with head tracking**.
+
+| Device | Cursor movement | Click button | Verified |
+|---|---|---|---|
+| AirPods 4 (standard / ANC) | ✅ | Stem press | Tested during development |
+| AirPods (3rd generation) | ✅ | Stem press | Per Apple's head-tracking list (not tested) |
+| AirPods Pro (all generations) | ✅ | Stem press | 〃 |
+| AirPods Max | ✅ | Digital Crown press | 〃 |
+| Beats Fit Pro | ✅ | Button press | Per Apple's Spatial Audio docs (not tested) |
+| AirPods (1st / 2nd generation) | ❌ | — | No head-tracking sensors |
+
+- AirPods 1st/2nd gen do have accelerometers, but only for ear detection and taps. They have no gyroscope to track head direction and tilt.
+- Clicks come from the play/next/previous signals sent by 1/2/3 presses of the stem or crown, so button presses on the devices above should work the same way.
+- Head gestures such as nod and shake are detected by PodMouse itself from the sensor data. They work on any head-tracking model, even ones without Apple's own head gestures (answering/declining calls).
+- To check your AirPods: put them in and see whether the values move under **Settings tab → Live Sensors**. If they're not supported, the menu bar shows "Head tracking unavailable".
+- Apple supports Spatial Audio head tracking on Macs with Apple silicon. Intel Macs haven't been tested.
 
 ## Install (Terminal)
 
