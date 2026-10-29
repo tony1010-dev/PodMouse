@@ -35,13 +35,13 @@ final class VoiceInput {
         guard SFSpeechRecognizer.authorizationStatus() == .authorized,
               AVCaptureDevice.authorizationStatus(for: .audio) == .authorized else {
             Self.requestPermissions { [weak self] ok in
-                if ok { self?.start() } else { self?.onMessage?("마이크/음성 인식 권한이 필요해요 (시스템 설정 → 개인정보 보호)") }
+                if ok { self?.start() } else { self?.onMessage?(L("마이크/음성 인식 권한이 필요해요 (시스템 설정 → 개인정보 보호)", "Microphone and Speech Recognition access are required (System Settings → Privacy & Security)")) }
             }
             return
         }
         recognizer = SFSpeechRecognizer(locale: Locale(identifier: settings.voiceLocale))
         guard let recognizer, recognizer.isAvailable else {
-            onMessage?("음성 인식을 사용할 수 없어요 (\(settings.voiceLocale))")
+            onMessage?(L("음성 인식을 사용할 수 없어요 (\(settings.voiceLocale))", "Speech recognition isn't available (\(settings.voiceLocale))"))
             return
         }
 
@@ -55,7 +55,7 @@ final class VoiceInput {
         let input = engine.inputNode
         let format = input.outputFormat(forBus: 0)
         guard format.sampleRate > 0 else {
-            onMessage?("마이크 입력 장치를 찾을 수 없어요")
+            onMessage?(L("마이크 입력 장치를 찾을 수 없어요", "No microphone input device found"))
             return
         }
         input.removeTap(onBus: 0)
@@ -67,7 +67,7 @@ final class VoiceInput {
             try engine.start()
         } catch {
             input.removeTap(onBus: 0)
-            onMessage?("마이크를 시작하지 못했어요: \(error.localizedDescription)")
+            onMessage?(L("마이크를 시작하지 못했어요: \(error.localizedDescription)", "Couldn't start the microphone: \(error.localizedDescription)"))
             return
         }
 
@@ -114,7 +114,7 @@ final class VoiceInput {
         request = nil
         let text = latestText.trimmingCharacters(in: .whitespacesAndNewlines)
         latestText = ""
-        guard !text.isEmpty else { onMessage?("인식된 말이 없어요"); return }
+        guard !text.isEmpty else { onMessage?(L("인식된 말이 없어요", "Didn't catch anything")); return }
         insert(text)
     }
 
@@ -130,7 +130,7 @@ final class VoiceInput {
 
     private func insert(_ text: String) {
         if let cmd = command(for: text) {
-            onMessage?("명령: \(text)")
+            onMessage?(L("명령: \(text)", "Command: \(text)"))
             cmd()
             return
         }
@@ -147,6 +147,6 @@ final class VoiceInput {
         } else {
             doPaste()
         }
-        onMessage?("입력: \(text)")
+        onMessage?(L("입력: \(text)", "Typed: \(text)"))
     }
 }

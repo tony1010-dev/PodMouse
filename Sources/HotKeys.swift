@@ -7,7 +7,7 @@ final class HotKeys {
         let keyCode: UInt32
         let modifiers: UInt32
         let display: String
-        let title: String
+        let title: () -> String  // 언어를 바꾸면 바로 반영되게 매번 계산
         let onPress: () -> Void
         let onRelease: (() -> Void)?
     }
@@ -19,7 +19,7 @@ final class HotKeys {
     private var handlerInstalled = false
     private(set) var all: [Binding] = []
 
-    func register(keyCode: Int, modifiers: Int, display: String, title: String,
+    func register(keyCode: Int, modifiers: Int, display: String, title: @autoclosure @escaping () -> String,
                   onPress: @escaping () -> Void, onRelease: (() -> Void)? = nil) {
         installHandlerIfNeeded()
         let id = nextID

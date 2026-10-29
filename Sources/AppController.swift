@@ -53,7 +53,7 @@ final class AppController: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWi
         motion.mouseEnabled = false
         motion.onGesture = { [weak self] trigger in self?.handle(trigger) }
         motion.onConnectionChange = { [weak self] connected in
-            HUD.shared.flash(connected ? "에어팟 연결됨" : "에어팟 연결 끊김", icon: connected ? "airpods" : "airpods.slash")
+            HUD.shared.flash(connected ? L("에어팟 연결됨", "AirPods connected") : L("에어팟 연결 끊김", "AirPods disconnected"), icon: connected ? "airpods" : "airpods.slash")
             if !connected { self?.setMouse(false, announce: false) }
             self?.refreshIcon()
         }
@@ -82,7 +82,7 @@ final class AppController: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWi
         if settings.showGuideOnLaunch {
             openWindow(tab: 0)
         } else {
-            HUD.shared.flash("PodMouse 실행됨 · ⌃⌥M 으로 마우스 모드 켜기", duration: 2.5)
+            HUD.shared.flash(L("PodMouse 실행됨 · ⌃⌥M 으로 마우스 모드 켜기", "PodMouse is running · press ⌃⌥M to turn on mouse mode"), duration: 2.5)
         }
     }
 
@@ -115,12 +115,12 @@ final class AppController: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWi
     func perform(_ action: PodAction, source: String? = nil) {
         switch action {
         case .none: return
-        case .leftClick: InputSynth.leftClick(); syncDrag(); flash("왼쪽 클릭", "cursorarrow.click")
-        case .rightClick: InputSynth.rightClick(); flash("오른쪽 클릭", "cursorarrow.click.2")
-        case .doubleClick: InputSynth.doubleClick(); flash("더블 클릭", "cursorarrow.click.2")
+        case .leftClick: InputSynth.leftClick(); syncDrag(); flash(L("왼쪽 클릭", "Left click"), "cursorarrow.click")
+        case .rightClick: InputSynth.rightClick(); flash(L("오른쪽 클릭", "Right click"), "cursorarrow.click.2")
+        case .doubleClick: InputSynth.doubleClick(); flash(L("더블 클릭", "Double click"), "cursorarrow.click.2")
         case .toggleDrag:
-            if InputSynth.isDragging { InputSynth.endDrag(); flash("드래그 끝", "hand.raised") }
-            else { InputSynth.beginDrag(); flash("드래그 중… (⌃⌥D 또는 ⌃⌥ , 로 놓기)", "hand.draw") }
+            if InputSynth.isDragging { InputSynth.endDrag(); flash(L("드래그 끝", "Drag ended"), "hand.raised") }
+            else { InputSynth.beginDrag(); flash(L("드래그 중… (⌃⌥D 또는 ⌃⌥ , 로 놓기)", "Dragging… (⌃⌥D or ⌃⌥ , to drop)"), "hand.draw") }
             syncDrag()
         case .toggleVoice: voice.toggle()
         case .toggleMouse: setMouse(!state.mouseEnabled)
@@ -137,7 +137,7 @@ final class AppController: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWi
 
     func setMouse(_ on: Bool, announce: Bool = true, center: Bool = true) {
         guard !on || checkAccessibility(prompt: true) else {
-            HUD.shared.flash("손쉬운 사용 권한이 필요해요", icon: "exclamationmark.triangle", duration: 2.5)
+            HUD.shared.flash(L("손쉬운 사용 권한이 필요해요", "Accessibility access is required"), icon: "exclamationmark.triangle", duration: 2.5)
             return
         }
         state.mouseEnabled = on
@@ -148,7 +148,7 @@ final class AppController: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWi
             // 정면을 보고 켜면 커서가 화면 정중앙에서 시작
             if center { InputSynth.move(to: InputSynth.mainScreenCenter()) }
             if CMHeadphoneMotionManager.authorizationStatus() == .denied {
-                HUD.shared.flash("동작 및 피트니스 권한이 꺼져 있어요", icon: "exclamationmark.triangle", duration: 2.5)
+                HUD.shared.flash(L("동작 및 피트니스 권한이 꺼져 있어요", "Motion & Fitness access is turned off"), icon: "exclamationmark.triangle", duration: 2.5)
             }
         } else {
             InputSynth.endDrag()
@@ -158,9 +158,9 @@ final class AppController: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWi
         updateStemCapture()
         if announce {
             let hint = !settings.joystickMode ? ""
-                : settings.joyRequiresKey ? " · ⌃⌥ / 누른 채 고개를 살짝 기울이면 이동"
-                : " · 고개를 살짝 기울이고 있으면 그쪽으로 이동"
-            HUD.shared.flash(on ? "마우스 모드 켜짐\(hint)" : "마우스 모드 꺼짐", icon: on ? "cursorarrow.motionlines" : "cursorarrow.slash",
+                : settings.joyRequiresKey ? L(" · ⌃⌥ / 누른 채 고개를 살짝 기울이면 이동", " · hold ⌃⌥ / and tilt your head slightly to move")
+                : L(" · 고개를 살짝 기울이고 있으면 그쪽으로 이동", " · keep your head slightly tilted to move that way")
+            HUD.shared.flash(on ? L("마우스 모드 켜짐\(hint)", "Mouse mode on\(hint)") : L("마우스 모드 꺼짐", "Mouse mode off"), icon: on ? "cursorarrow.motionlines" : "cursorarrow.slash",
                              duration: on ? 3.0 : 1.2)
         }
         refreshIcon()
@@ -170,14 +170,14 @@ final class AppController: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWi
         state.scrollMode = on
         motion.scrollMode = on
         motion.recalibrate()
-        if announce { HUD.shared.flash(on ? "스크롤 모드: 고개로 스크롤" : "스크롤 모드 꺼짐", icon: "arrow.up.and.down") }
+        if announce { HUD.shared.flash(on ? L("스크롤 모드: 고개로 스크롤", "Scroll mode: scroll with your head") : L("스크롤 모드 꺼짐", "Scroll mode off"), icon: "arrow.up.and.down") }
         refreshIcon()
     }
 
     func recenter() {
         motion.recalibrate()
         if state.mouseEnabled { InputSynth.move(to: InputSynth.mainScreenCenter()) }
-        HUD.shared.flash("정면 기준 재설정 · 커서 중앙", icon: "scope")
+        HUD.shared.flash(L("정면 기준 재설정 · 커서 중앙", "Forward reset · cursor centered"), icon: "scope")
     }
 
     func setStemCapture(_ on: Bool) {
@@ -202,22 +202,22 @@ final class AppController: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWi
     private func registerHotKeys() {
         let mods = controlKey | optionKey
         let hk = HotKeys.shared
-        hk.register(keyCode: kVK_ANSI_M, modifiers: mods, display: "⌃⌥M", title: "마우스 모드 켜기/끄기") { [weak self] in
+        hk.register(keyCode: kVK_ANSI_M, modifiers: mods, display: "⌃⌥M", title: L("마우스 모드 켜기/끄기", "Toggle mouse mode")) { [weak self] in
             self?.perform(.toggleMouse)
         }
-        hk.register(keyCode: kVK_ANSI_R, modifiers: mods, display: "⌃⌥R", title: "기준 자세 재설정 + 커서 중앙") { [weak self] in
+        hk.register(keyCode: kVK_ANSI_R, modifiers: mods, display: "⌃⌥R", title: L("기준 자세 재설정 + 커서 중앙", "Reset reference pose + center cursor")) { [weak self] in
             self?.perform(.recenter)
         }
         // 짧게 누르면 켜기/끄기, 길게 누르고 있으면 누르는 동안만 녹음
-        hk.register(keyCode: kVK_ANSI_Slash, modifiers: mods, display: "⌃⌥ /", title: "지금 고개 위치를 멈춤 기준으로 (키 모드: 누르는 동안 이동)",
+        hk.register(keyCode: kVK_ANSI_Slash, modifiers: mods, display: "⌃⌥ /", title: L("지금 고개 위치를 멈춤 기준으로 (키 모드: 누르는 동안 이동)", "Set current head position as rest (key mode: move while held)"),
                     onPress: { [weak self] in
                         guard let self, !self.joyKeyDown else { return }
                         self.joyKeyDown = true
                         PLog.write("hotkey ⌃⌥/ down")
                         if self.settings.joyRequiresKey {
-                            HUD.shared.showHold("이동 중 · 고개를 살짝 기울이세요", icon: "move.3d")
+                            HUD.shared.showHold(L("이동 중 · 고개를 살짝 기울이세요", "Moving · tilt your head slightly"), icon: "move.3d")
                         } else {
-                            HUD.shared.flash("지금 고개 위치 = 멈춤", icon: "scope")
+                            HUD.shared.flash(L("지금 고개 위치 = 멈춤", "Current head position = rest"), icon: "scope")
                         }
                         if !self.state.mouseEnabled { self.setMouse(true, announce: false, center: false) }
                         self.motion.beginJoystickHold()
@@ -229,7 +229,7 @@ final class AppController: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWi
                         HUD.shared.endHold()
                         if InputSynth.heldButton == nil { self.motion.endJoystickHold() }
                     })
-        hk.register(keyCode: kVK_ANSI_V, modifiers: mods, display: "⌃⌥V", title: "음성 입력 (탭: 켜기/끄기, 길게: 누르는 동안)",
+        hk.register(keyCode: kVK_ANSI_V, modifiers: mods, display: "⌃⌥V", title: L("음성 입력 (탭: 켜기/끄기, 길게: 누르는 동안)", "Voice input (tap: on/off, hold: while held)"),
                     onPress: { [weak self] in
                         guard let self else { return }
                         self.voiceHotkeyDownAt = ProcessInfo.processInfo.systemUptime
@@ -241,34 +241,34 @@ final class AppController: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWi
                         if ProcessInfo.processInfo.systemUptime - self.voiceHotkeyDownAt > 0.6 { self.voice.stop() }
                     })
         // 누르는 순간 버튼 누름, 떼는 순간 버튼 뗌 → 짧게 = 클릭, 꾹 누르고 고개 움직이기 = 드래그
-        hk.register(keyCode: kVK_ANSI_Comma, modifiers: mods, display: "⌃⌥ ,", title: "왼쪽 클릭 (꾹 누르면 드래그)",
+        hk.register(keyCode: kVK_ANSI_Comma, modifiers: mods, display: "⌃⌥ ,", title: L("왼쪽 클릭 (꾹 누르면 드래그)", "Left click (hold to drag)"),
                     onPress: { [weak self] in self?.hotkeyButton(.left, down: true) },
                     onRelease: { [weak self] in self?.hotkeyButton(.left, down: false) })
-        hk.register(keyCode: kVK_ANSI_Period, modifiers: mods, display: "⌃⌥ .", title: "오른쪽 클릭",
+        hk.register(keyCode: kVK_ANSI_Period, modifiers: mods, display: "⌃⌥ .", title: L("오른쪽 클릭", "Right click"),
                     onPress: { [weak self] in self?.hotkeyButton(.right, down: true) },
                     onRelease: { [weak self] in self?.hotkeyButton(.right, down: false) })
-        hk.register(keyCode: kVK_ANSI_D, modifiers: mods, display: "⌃⌥D", title: "드래그 시작/끝") { [weak self] in
+        hk.register(keyCode: kVK_ANSI_D, modifiers: mods, display: "⌃⌥D", title: L("드래그 시작/끝", "Start/end drag")) { [weak self] in
             self?.perform(.toggleDrag)
         }
-        hk.register(keyCode: kVK_ANSI_S, modifiers: mods, display: "⌃⌥S", title: "스크롤 모드 켜기/끄기") { [weak self] in
+        hk.register(keyCode: kVK_ANSI_S, modifiers: mods, display: "⌃⌥S", title: L("스크롤 모드 켜기/끄기", "Toggle scroll mode")) { [weak self] in
             self?.perform(.toggleScroll)
         }
-        hk.register(keyCode: kVK_ANSI_G, modifiers: mods, display: "⌃⌥G", title: "머리 제스처 켜기/끄기") { [weak self] in
+        hk.register(keyCode: kVK_ANSI_G, modifiers: mods, display: "⌃⌥G", title: L("머리 제스처 켜기/끄기", "Toggle head gestures")) { [weak self] in
             guard let self else { return }
             self.settings.gesturesEnabled.toggle()
-            HUD.shared.flash(self.settings.gesturesEnabled ? "제스처 켜짐" : "제스처 꺼짐", icon: "hand.wave")
+            HUD.shared.flash(self.settings.gesturesEnabled ? L("제스처 켜짐", "Gestures on") : L("제스처 꺼짐", "Gestures off"), icon: "hand.wave")
         }
-        hk.register(keyCode: kVK_ANSI_Equal, modifiers: mods, display: "⌃⌥=", title: "감도 올리기") { [weak self] in
+        hk.register(keyCode: kVK_ANSI_Equal, modifiers: mods, display: "⌃⌥=", title: L("감도 올리기", "Increase sensitivity")) { [weak self] in
             self?.adjustSensitivity(1.15)
         }
-        hk.register(keyCode: kVK_ANSI_Minus, modifiers: mods, display: "⌃⌥-", title: "감도 내리기") { [weak self] in
+        hk.register(keyCode: kVK_ANSI_Minus, modifiers: mods, display: "⌃⌥-", title: L("감도 내리기", "Decrease sensitivity")) { [weak self] in
             self?.adjustSensitivity(1 / 1.15)
         }
     }
 
     private func hotkeyButton(_ button: CGMouseButton, down: Bool) {
         guard checkAccessibility(prompt: down) else {
-            if down { HUD.shared.flash("손쉬운 사용 권한이 필요해요", icon: "exclamationmark.triangle", duration: 2.5) }
+            if down { HUD.shared.flash(L("손쉬운 사용 권한이 필요해요", "Accessibility access is required"), icon: "exclamationmark.triangle", duration: 2.5) }
             return
         }
         if down {
@@ -276,7 +276,7 @@ final class AppController: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWi
             motion.beginJoystickHold() // 꾹 누르고 고개를 기울이면 드래그
             InputSynth.buttonDown(button)
             state.practiced.insert(button == .left ? "hotkeyLeft" : "hotkeyRight")
-            flash(button == .left ? "왼쪽 클릭" : "오른쪽 클릭", button == .left ? "cursorarrow.click" : "cursorarrow.click.2")
+            flash(button == .left ? L("왼쪽 클릭", "Left click") : L("오른쪽 클릭", "Right click"), button == .left ? "cursorarrow.click" : "cursorarrow.click.2")
         } else {
             InputSynth.buttonUp(button)
             if !joyKeyDown { motion.endJoystickHold() }
@@ -286,7 +286,7 @@ final class AppController: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWi
 
     private func adjustSensitivity(_ factor: Double) {
         settings.sensitivity = min(80, max(4, settings.sensitivity * factor))
-        HUD.shared.flash(String(format: "감도 %.0f", settings.sensitivity), icon: "dial.medium")
+        HUD.shared.flash(String(format: L("감도 %.0f", "Sensitivity %.0f"), settings.sensitivity), icon: "dial.medium")
     }
 
     // MARK: - 메뉴바
@@ -323,58 +323,59 @@ final class AppController: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWi
         let t = Telemetry.shared
 
         let status: String
-        if !motion.isAvailable { status = "⚠️ 헤드 트래킹을 쓸 수 없음" }
-        else if t.receiving && t.connected { status = String(format: "에어팟 연결됨 · %.0fHz", t.updateHz) }
-        else { status = "에어팟을 귀에 착용하세요" }
+        if !motion.isAvailable { status = L("⚠️ 헤드 트래킹을 쓸 수 없음", "⚠️ Head tracking unavailable") }
+        else if t.receiving && t.connected { status = String(format: L("에어팟 연결됨 · %.0fHz", "AirPods connected · %.0f Hz"), t.updateHz) }
+        else { status = L("에어팟을 귀에 착용하세요", "Put your AirPods in") }
         menu.addItem(disabled(status))
         if !state.accessibilityOK {
-            menu.addItem(item("⚠️ 손쉬운 사용 권한 허용하기…") { [weak self] in
+            menu.addItem(item(L("⚠️ 손쉬운 사용 권한 허용하기…", "⚠️ Allow Accessibility Access…")) { [weak self] in
                 self?.checkAccessibility(prompt: true)
                 NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")!)
             })
         }
         menu.addItem(.separator())
 
-        menu.addItem(item("마우스 모드", key: "⌃⌥M", on: state.mouseEnabled) { [weak self] in self?.perform(.toggleMouse) })
-        menu.addItem(item("스크롤 모드", key: "⌃⌥S", on: state.scrollMode) { [weak self] in self?.perform(.toggleScroll) })
-        menu.addItem(item(state.listening ? "음성 입력 끝내기" : "음성 입력 시작", key: "⌃⌥V", on: state.listening) { [weak self] in
+        menu.addItem(item(L("마우스 모드", "Mouse Mode"), key: "⌃⌥M", on: state.mouseEnabled) { [weak self] in self?.perform(.toggleMouse) })
+        menu.addItem(item(L("스크롤 모드", "Scroll Mode"), key: "⌃⌥S", on: state.scrollMode) { [weak self] in self?.perform(.toggleScroll) })
+        menu.addItem(item(state.listening ? L("음성 입력 끝내기", "Stop Voice Input") : L("음성 입력 시작", "Start Voice Input"), key: "⌃⌥V", on: state.listening) { [weak self] in
             self?.perform(.toggleVoice)
         })
-        menu.addItem(item("기준 자세 재설정", key: "⌃⌥R") { [weak self] in self?.perform(.recenter) })
+        menu.addItem(item(L("기준 자세 재설정", "Reset Reference Pose"), key: "⌃⌥R") { [weak self] in self?.perform(.recenter) })
         menu.addItem(.separator())
 
-        menu.addItem(item("머리 제스처 사용", key: "⌃⌥G", on: settings.gesturesEnabled) { [weak self] in
+        menu.addItem(item(L("머리 제스처 사용", "Head Gestures"), key: "⌃⌥G", on: settings.gesturesEnabled) { [weak self] in
             self?.settings.gesturesEnabled.toggle()
         })
-        menu.addItem(item("에어팟 기둥 누르기로 클릭 (마우스 모드일 때)", on: settings.captureStem) { [weak self] in
+        menu.addItem(item(L("에어팟 기둥 누르기로 클릭 (마우스 모드일 때)", "Click with AirPods Stem (in Mouse Mode)"), on: settings.captureStem) { [weak self] in
             guard let self else { return }
             self.setStemCapture(!self.settings.captureStem)
         })
-        menu.addItem(item("음성 입력 후 Enter 자동", on: settings.autoEnter) { [weak self] in
+        menu.addItem(item(L("음성 입력 후 Enter 자동", "Auto Enter After Voice Input"), on: settings.autoEnter) { [weak self] in
             self?.settings.autoEnter.toggle()
         })
         menu.addItem(voiceTargetMenu())
+        menu.addItem(languageMenu())
         menu.addItem(.separator())
 
-        menu.addItem(item("사용 안내 열기…") { [weak self] in self?.openWindow(tab: 0) })
-        menu.addItem(item("조작법 보기…") { [weak self] in self?.openWindow(tab: 1) })
-        menu.addItem(item("설정 및 보정…") { [weak self] in self?.openWindow(tab: 2) })
-        menu.addItem(item("로그인 시 자동 실행", on: SMAppService.mainApp.status == .enabled) {
+        menu.addItem(item(L("사용 안내 열기…", "Open Guide…")) { [weak self] in self?.openWindow(tab: 0) })
+        menu.addItem(item(L("조작법 보기…", "Controls…")) { [weak self] in self?.openWindow(tab: 1) })
+        menu.addItem(item(L("설정 및 보정…", "Settings & Calibration…")) { [weak self] in self?.openWindow(tab: 2) })
+        menu.addItem(item(L("로그인 시 자동 실행", "Launch at Login"), on: SMAppService.mainApp.status == .enabled) {
             do {
                 if SMAppService.mainApp.status == .enabled { try SMAppService.mainApp.unregister() }
                 else { try SMAppService.mainApp.register() }
             } catch {
-                HUD.shared.flash("로그인 항목 설정 실패: \(error.localizedDescription)", icon: "exclamationmark.triangle", duration: 2.5)
+                HUD.shared.flash(L("로그인 항목 설정 실패: \(error.localizedDescription)", "Couldn't change login item: \(error.localizedDescription)"), icon: "exclamationmark.triangle", duration: 2.5)
             }
         })
         menu.addItem(.separator())
-        menu.addItem(item("PodMouse 종료") { NSApp.terminate(nil) })
+        menu.addItem(item(L("PodMouse 종료", "Quit PodMouse")) { NSApp.terminate(nil) })
     }
 
     private func voiceTargetMenu() -> NSMenuItem {
-        let parent = NSMenuItem(title: "음성 입력 대상", action: nil, keyEquivalent: "")
+        let parent = NSMenuItem(title: L("음성 입력 대상", "Voice Input Target"), action: nil, keyEquivalent: "")
         let sub = NSMenu()
-        sub.addItem(item("현재 포커스된 창", on: settings.voiceTargetBundleID.isEmpty) { [weak self] in
+        sub.addItem(item(L("현재 포커스된 창", "Currently Focused Window"), on: settings.voiceTargetBundleID.isEmpty) { [weak self] in
             self?.settings.voiceTargetBundleID = ""
         })
         sub.addItem(.separator())
@@ -391,7 +392,17 @@ final class AppController: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWi
         }
         let current = settings.voiceTargetBundleID
         if !current.isEmpty && !apps.contains(where: { $0.bundleIdentifier == current }) {
-            sub.addItem(item("\(current) (실행 중 아님)", on: true) {})
+            sub.addItem(item(L("\(current) (실행 중 아님)", "\(current) (not running)"), on: true) {})
+        }
+        parent.submenu = sub
+        return parent
+    }
+
+    private func languageMenu() -> NSMenuItem {
+        let parent = NSMenuItem(title: "언어 / Language", action: nil, keyEquivalent: "")
+        let sub = NSMenu()
+        for (tag, title) in [("system", L("시스템 설정 따르기", "Same as System")), ("ko", "한국어"), ("en", "English")] {
+            sub.addItem(item(title, on: settings.language == tag) { [weak self] in self?.settings.setLanguage(tag) })
         }
         parent.submenu = sub
         return parent
@@ -438,10 +449,10 @@ final class AppController: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWi
     func windowWillClose(_ notification: Notification) {
         guard (notification.object as? NSWindow) === settingsWindow else { return }
         NSApp.setActivationPolicy(.accessory)
-        HUD.shared.flash("PodMouse는 메뉴바에서 계속 실행 중이에요", duration: 2.0)
+        HUD.shared.flash(L("PodMouse는 메뉴바에서 계속 실행 중이에요", "PodMouse keeps running in the menu bar"), duration: 2.0)
     }
 
-    var hotKeyList: [(String, String)] { HotKeys.shared.all.map { ($0.display, $0.title) } }
+    var hotKeyList: [(String, String)] { HotKeys.shared.all.map { ($0.display, $0.title()) } }
 }
 
 final class ClosureMenuItem: NSMenuItem {

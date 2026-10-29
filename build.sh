@@ -9,6 +9,7 @@ APP=build/PodMouse.app
 rm -rf "$APP"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 cp Info.plist "$APP/Contents/Info.plist"
+cp -R Resources/. "$APP/Contents/Resources/"   # 권한 요청 문구 (한국어/영어)
 
 swiftc -O -swift-version 5 \
   -target "$(uname -m)-apple-macos14.0" \

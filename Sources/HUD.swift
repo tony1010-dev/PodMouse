@@ -48,7 +48,7 @@ final class HUD {
     /// 음성 입력 중 계속 떠 있는 표시
     func showListening(_ text: String) {
         model.listening = true
-        show(text.isEmpty ? "듣는 중…" : text, icon: "waveform")
+        show(text.isEmpty ? L("듣는 중…", "Listening…") : text, icon: "waveform")
         hideWork?.cancel()
     }
 

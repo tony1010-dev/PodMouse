@@ -19,17 +19,17 @@ enum PodAction: String, CaseIterable, Identifiable, Codable {
 
     var label: String {
         switch self {
-        case .none: return "없음"
-        case .leftClick: return "왼쪽 클릭"
-        case .rightClick: return "오른쪽 클릭"
-        case .doubleClick: return "더블 클릭"
-        case .toggleDrag: return "드래그 시작/끝"
-        case .toggleVoice: return "음성 입력 시작/끝"
-        case .toggleMouse: return "마우스 모드 켜기/끄기"
-        case .toggleScroll: return "스크롤 모드 켜기/끄기"
-        case .recenter: return "커서 화면 중앙으로"
-        case .pressEnter: return "Enter 키"
-        case .pressEscape: return "Esc 키"
+        case .none: return L("없음", "None")
+        case .leftClick: return L("왼쪽 클릭", "Left click")
+        case .rightClick: return L("오른쪽 클릭", "Right click")
+        case .doubleClick: return L("더블 클릭", "Double click")
+        case .toggleDrag: return L("드래그 시작/끝", "Start/end drag")
+        case .toggleVoice: return L("음성 입력 시작/끝", "Start/stop voice input")
+        case .toggleMouse: return L("마우스 모드 켜기/끄기", "Toggle mouse mode")
+        case .toggleScroll: return L("스크롤 모드 켜기/끄기", "Toggle scroll mode")
+        case .recenter: return L("커서 화면 중앙으로", "Center cursor")
+        case .pressEnter: return L("Enter 키", "Enter key")
+        case .pressEscape: return L("Esc 키", "Esc key")
         }
     }
 }
@@ -48,13 +48,13 @@ enum PodTrigger: String, CaseIterable, Identifiable {
 
     var label: String {
         switch self {
-        case .nod: return "고개 까딱 (끄덕)"
-        case .tiltRight: return "오른쪽으로 갸웃"
-        case .tiltLeft: return "왼쪽으로 갸웃"
-        case .shake: return "도리도리"
-        case .stemSingle: return "기둥 1번 누르기"
-        case .stemDouble: return "기둥 2번 누르기"
-        case .stemTriple: return "기둥 3번 누르기"
+        case .nod: return L("고개 까딱 (끄덕)", "Nod")
+        case .tiltRight: return L("오른쪽으로 갸웃", "Tilt right")
+        case .tiltLeft: return L("왼쪽으로 갸웃", "Tilt left")
+        case .shake: return L("도리도리", "Head shake")
+        case .stemSingle: return L("기둥 1번 누르기", "Stem press ×1")
+        case .stemDouble: return L("기둥 2번 누르기", "Stem press ×2")
+        case .stemTriple: return L("기둥 3번 누르기", "Stem press ×3")
         }
     }
 
@@ -122,6 +122,10 @@ final class Settings: ObservableObject {
     @Published var captureStem: Bool { didSet { d.set(captureStem, forKey: "captureStem") } }
 
     // 기타
+    /// 앱 언어: "system"(시스템 따르기) / "ko" / "en"
+    @Published var language: String { didSet { d.set(language, forKey: "language") } }
+    var isKorean: Bool { language == "ko" || (language == "system" && Settings.systemIsKorean) }
+    static var systemIsKorean: Bool { Locale.preferredLanguages.first?.hasPrefix("ko") ?? false }
     @Published var showHUD: Bool { didSet { d.set(showHUD, forKey: "showHUD") } }
     @Published var showGuideOnLaunch: Bool { didSet { d.set(showGuideOnLaunch, forKey: "showGuideOnLaunch") } }
 
@@ -147,12 +151,13 @@ final class Settings: ObservableObject {
             "tiltAngle": 18.0,
             "shakeThreshold": 140.0,
             "invertTilt": false,
-            "voiceLocale": "ko-KR",
+            "voiceLocale": Settings.systemIsKorean ? "ko-KR" : "en-US",
             "autoEnter": false,
             "voiceTargetBundleID": "",
             "captureStem": true,
             "showHUD": true,
             "showGuideOnLaunch": true,
+            "language": "system",
         ])
         sensitivity = d.double(forKey: "sensitivity")
         acceleration = d.double(forKey: "acceleration")
@@ -175,12 +180,19 @@ final class Settings: ObservableObject {
         shakeThreshold = d.double(forKey: "shakeThreshold")
         invertTilt = d.bool(forKey: "invertTilt")
         actions = (d.dictionary(forKey: "actions") as? [String: String]) ?? [:]
-        voiceLocale = d.string(forKey: "voiceLocale") ?? "ko-KR"
+        voiceLocale = d.string(forKey: "voiceLocale") ?? (Settings.systemIsKorean ? "ko-KR" : "en-US")
         autoEnter = d.bool(forKey: "autoEnter")
         voiceTargetBundleID = d.string(forKey: "voiceTargetBundleID") ?? ""
         captureStem = d.bool(forKey: "captureStem")
         showHUD = d.bool(forKey: "showHUD")
         showGuideOnLaunch = d.bool(forKey: "showGuideOnLaunch")
+        language = d.string(forKey: "language") ?? "system"
+    }
+
+    /// 앱 언어를 바꾸면 음성 인식 언어도 한국어/영어에 맞춰 같이 바꿈 (다른 언어를 골라 둔 경우는 그대로)
+    func setLanguage(_ lang: String) {
+        language = lang
+        if voiceLocale == "ko-KR" || voiceLocale == "en-US" { voiceLocale = isKorean ? "ko-KR" : "en-US" }
     }
 
     func action(for trigger: PodTrigger) -> PodAction {

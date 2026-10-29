@@ -37,7 +37,7 @@ final class StemButtons {
         }
         MPNowPlayingInfoCenter.default().nowPlayingInfo = [
             MPMediaItemPropertyTitle: "PodMouse",
-            MPMediaItemPropertyArtist: "에어팟 마우스 모드",
+            MPMediaItemPropertyArtist: L("에어팟 마우스 모드", "AirPods Mouse Mode"),
             MPNowPlayingInfoPropertyPlaybackRate: 1.0,
         ]
         MPNowPlayingInfoCenter.default().playbackState = .playing
