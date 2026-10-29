@@ -28,12 +28,50 @@ AirPods 4(및 헤드 트래킹 지원 AirPods Pro / 3세대 / Max)의 모션 센
 - 헤드 트래킹을 지원하는 AirPods (AirPods 4 / AirPods 3세대 / AirPods Pro / AirPods Max)
 - Xcode 또는 Command Line Tools (`swiftc`) — Xcode 프로젝트 없이 `build.sh` 하나로 빌드돼요
 
-## 빌드 / 실행
+## 설치 (터미널)
+
+터미널에 아래를 붙여넣으면 받아서 빌드하고 `/Applications`에 설치한 뒤 바로 실행해요.
+
+```bash
+git clone https://github.com/tony1010-dev/PodMouse.git ~/PodMouse
+cd ~/PodMouse
+./install.sh
+```
+
+`install.sh`가 하는 일
+- macOS 버전과 Swift 컴파일러(Command Line Tools)가 있는지 확인
+- 빌드 → `/Applications/PodMouse.app` 설치 → 실행
+- 설치된 기본 SDK가 컴파일러 버전과 안 맞으면(`this SDK is not supported by the compiler`) 다른 SDK로 자동 재시도
+
+> Command Line Tools가 없다고 나오면 `xcode-select --install` 로 먼저 설치하세요.
+
+### 업데이트
+
+```bash
+cd ~/PodMouse && git pull && ./install.sh
+```
+
+### 삭제
+
+```bash
+~/PodMouse/install.sh uninstall
+rm -rf ~/PodMouse
+```
+
+시스템 설정 → 개인정보 보호 및 보안 → 손쉬운 사용 목록에 남은 PodMouse 항목도 지워주세요.
+
+### 직접 빌드
 
 ```bash
 ./build.sh            # build/PodMouse.app 생성
 ./build.sh install    # /Applications 에 설치하고 실행
+SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk ./build.sh   # SDK 지정
 ```
+
+개발자 인증서(Apple Development / Developer ID)가 있으면 자동으로 그걸로 서명해요. 없으면 ad-hoc 서명이라,
+다시 빌드할 때마다 손쉬운 사용 권한을 다시 켜야 할 수 있어요. 특정 인증서는 `PODMOUSE_SIGN_IDENTITY`로 지정할 수 있어요.
+
+## 처음 실행
 
 실행하면 **PodMouse 창**이 떠요.
 - **시작하기**: 단계별 체크리스트 (직접 해보면 자동으로 체크됨)와 클릭 연습 영역
@@ -111,3 +149,7 @@ Finder나 Spotlight에서 PodMouse를 다시 실행해도 창이 열려요.
   케이스 뚜껑 열림/닫힘도 공개 API로는 알 수 없어서 케이스 상태 마우스는 지원하지 않아요.
 - 귀 감지를 끄고 에어팟을 손에 쥐면 값이 나오는 경우도 있어요. 실시간 센서 화면에서 확인해 보세요.
 - 센서 업데이트는 약 25Hz라서 120Hz로 보간해 부드럽게 움직이게 했어요.
+
+## 라이선스
+
+[MIT](LICENSE)
