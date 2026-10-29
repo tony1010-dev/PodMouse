@@ -314,9 +314,42 @@ final class AppController: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWi
         if state.listening { names = ["waveform"] }
         else if state.scrollMode { names = ["arrow.up.and.down.circle"] }
         else if state.mouseEnabled { names = ["cursorarrow.motionlines"] }
-        else { names = ["airpods.gen4", "airpods", "headphones"] }
+        else {
+            // 시스템 에어팟 아이콘과 헷갈리지 않게 커서를 붙인 아이콘
+            statusItem.button?.image = idleIcon ?? symbol(["airpods.gen4", "airpods", "headphones"])
+            return
+        }
         statusItem.button?.image = symbol(names)
     }
+
+    /// 대기 상태 메뉴바 아이콘: 에어팟 + 오른쪽 아래 커서 (겹치는 부분은 테두리만큼 비워서 구분)
+    private lazy var idleIcon: NSImage? = {
+        func sym(_ names: [String], _ pt: CGFloat, _ weight: NSFont.Weight) -> NSImage? {
+            for n in names {
+                if let img = NSImage(systemSymbolName: n, accessibilityDescription: "PodMouse") {
+                    return img.withSymbolConfiguration(.init(pointSize: pt, weight: weight))
+                }
+            }
+            return nil
+        }
+        guard let pods = sym(["airpods.gen4", "airpods", "headphones"], 14, .regular),
+              let arrow = sym(["cursorarrow"], 11, .heavy) else { return nil }
+        let size = NSSize(width: pods.size.width + arrow.size.width * 0.65, height: 18)
+        let img = NSImage(size: size, flipped: false) { r in
+            pods.draw(in: NSRect(x: 0, y: (r.height - pods.size.height) / 2, width: pods.size.width, height: pods.size.height))
+            let a = NSRect(x: r.width - arrow.size.width, y: 0, width: arrow.size.width, height: arrow.size.height)
+            for dx in [-1.5, 0, 1.5] {
+                for dy in [-1.5, 0, 1.5] {
+                    arrow.draw(in: a.offsetBy(dx: dx, dy: dy), from: .zero, operation: .destinationOut, fraction: 1)
+                }
+            }
+            arrow.draw(in: a, from: .zero, operation: .sourceOver, fraction: 1)
+            return true
+        }
+        img.isTemplate = true
+        img.accessibilityDescription = "PodMouse"
+        return img
+    }()
 
     func menuNeedsUpdate(_ menu: NSMenu) {
         menu.removeAllItems()
