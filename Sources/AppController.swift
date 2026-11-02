@@ -434,7 +434,7 @@ final class AppController: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWi
     private func languageMenu() -> NSMenuItem {
         let parent = NSMenuItem(title: "언어 / Language", action: nil, keyEquivalent: "")
         let sub = NSMenu()
-        for (tag, title) in [("system", L("시스템 설정 따르기", "Same as System")), ("ko", "한국어"), ("en", "English")] {
+        for (tag, title) in [("en", "English"), ("ko", "한국어"), ("system", L("시스템 설정 따르기", "Same as System"))] {
             sub.addItem(item(title, on: settings.language == tag) { [weak self] in self?.settings.setLanguage(tag) })
         }
         parent.submenu = sub
