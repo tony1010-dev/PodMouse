@@ -1,60 +1,61 @@
-# PodMouse — 에어팟 마우스
+# PodMouse — AirPods Mouse
 
-**한국어** | [English](README.en.md)
+[한국어](README.ko.md) | **English**
 
-헤드 트래킹을 지원하는 에어팟(AirPods 3세대 이후 · AirPods Pro · AirPods Max)의 모션 센서로 커서를 움직이고,
-머리 동작·기둥 누르기·단축키로 클릭하고, 음성으로 Claude Code·Codex에 말로 코딩하는 메뉴바 앱.
+A macOS menu bar app that turns your AirPods into a mouse. The motion sensors in head-tracking AirPods
+(AirPods 3rd gen and later · AirPods Pro · AirPods Max) move the cursor. You click with head gestures, stem presses, or shortcuts, and you can
+code by voice in Claude Code or Codex.
 
 <p align="center">
-  <img src="docs/screenshots/ko/start.png" width="720" alt="PodMouse 시작하기 화면">
+  <img src="docs/screenshots/en/start.png" width="720" alt="PodMouse Get Started screen">
 </p>
 
-## 이런 앱이에요
+## Features
 
-- 🎧 **에어팟이 마우스가 됩니다** — 별도 장비 없이, 귀에 낀 에어팟의 헤드 트래킹 센서로 고개를 살짝 기울여 커서를 움직여요.
-- 🖱️ **손을 거의 안 쓰고 클릭** — 에어팟 기둥 1번/2번 누르기로 왼쪽/오른쪽 클릭, ⌃⌥ 단축키로 클릭·드래그·스크롤.
-- 🗣️ **말로 코딩** — 기둥 3번(또는 ⌃⌥V)으로 음성 입력. 받아쓴 문장을 Claude Code·Codex가 돌고 있는 터미널에 바로 보내요.
-- 🧭 **처음 써도 쉽게** — 단계별 체크리스트가 직접 해보면 자동으로 체크되고, 연습 영역에서 클릭을 시험해볼 수 있어요.
-- ⚙️ **세밀한 보정** — 실시간 센서 값을 보면서 감도·데드존·제스처 기준을 맞출 수 있어요.
-- 🌐 **English / 한국어** — 설치하면 시스템 언어를 따라가요. 설정 → 앱 언어 또는 메뉴바 → 언어에서 바꿀 수 있어요.
+- 🎧 **Your AirPods become a mouse.** No extra hardware: tilt your head slightly and the head-tracking sensors in your AirPods move the cursor.
+- 🖱️ **Click almost hands-free.** Press an AirPods stem once or twice to left- or right-click, or use ⌃⌥ shortcuts to click, drag and scroll.
+- 🗣️ **Code by voice.** Press the stem three times (or ⌃⌥V) to dictate. The text goes straight into the terminal running Claude Code or Codex.
+- 🧭 **Easy to learn.** A step-by-step checklist ticks itself off as you try each step, and a practice area lets you test clicks.
+- ⚙️ **Fine-grained calibration.** Tune sensitivity, dead zone and gesture thresholds while watching live sensor values.
+- 🌐 **English / 한국어.** Follows your system language on install. Change it in Settings → App language or menu bar → Language.
 
-## 스크린샷
+## Screenshots
 
-| 시작하기 | 조작법 | 설정 |
+| Get Started | Controls | Settings |
 |---|---|---|
-| <img src="docs/screenshots/ko/start.png" alt="시작하기"> | <img src="docs/screenshots/ko/controls.png" alt="조작법"> | <img src="docs/screenshots/ko/settings.png" alt="설정"> |
-| 단계별 체크리스트 + 클릭 연습 영역 | 모든 동작과 단축키 설명 | 상태·실시간 센서·커서 감도 조절 |
+| <img src="docs/screenshots/en/start.png" alt="Get Started"> | <img src="docs/screenshots/en/controls.png" alt="Controls"> | <img src="docs/screenshots/en/settings.png" alt="Settings"> |
+| Step-by-step checklist + click practice area | Every action and shortcut explained | Status, live sensors, cursor tuning |
 
-## 요구 사항
+## Requirements
 
-- macOS 14 (Sonoma) 이상
-- 헤드 트래킹을 지원하는 AirPods ([지원 기기](#지원-기기) 참고)
-- Apple 실리콘 Mac 권장 (인텔 Mac은 테스트하지 않았어요)
-- Xcode 또는 Command Line Tools (`swiftc`) — Xcode 프로젝트 없이 `build.sh` 하나로 빌드돼요
+- macOS 14 (Sonoma) or later
+- AirPods with head tracking (see [Supported devices](#supported-devices))
+- A Mac with Apple silicon is recommended (Intel Macs haven't been tested)
+- Xcode or the Command Line Tools (`swiftc`). There's no Xcode project; `build.sh` builds everything.
 
-## 지원 기기
+## Supported devices
 
-PodMouse는 Apple의 헤드폰 모션 API(`CMHeadphoneMotionManager`, macOS 14부터)로 센서 값을 읽어요.
-이 API는 **공간 음향 머리 추적(헤드 트래킹)을 지원하는 기기**에서만 값을 줘요.
+PodMouse reads sensor data through Apple's headphone motion API (`CMHeadphoneMotionManager`, macOS 14 and later).
+This API only provides data for **devices that support Spatial Audio with head tracking**.
 
-| 기기 | 커서 이동 | 클릭 버튼 | 확인 |
+| Device | Cursor movement | Click button | Verified |
 |---|---|---|---|
-| AirPods 4 (일반 / 노이즈 캔슬링) | ✅ | 기둥 누르기 | 개발하면서 직접 테스트 |
-| AirPods 3세대 | ✅ | 기둥 누르기 | Apple 헤드 트래킹 지원 목록 기준 (직접 테스트는 안 함) |
-| AirPods Pro (모든 세대) | ✅ | 기둥 누르기 | 〃 |
-| AirPods Max | ✅ | 디지털 크라운 누르기 | 〃 |
-| Beats Fit Pro | ✅ | 버튼 누르기 | Apple 공간 음향 문서 기준 (직접 테스트는 안 함) |
-| AirPods 1·2세대 | ❌ | — | 헤드 트래킹 센서 없음 |
+| AirPods 4 (standard / ANC) | ✅ | Stem press | Tested during development |
+| AirPods (3rd generation) | ✅ | Stem press | Per Apple's head-tracking list (not tested) |
+| AirPods Pro (all generations) | ✅ | Stem press | 〃 |
+| AirPods Max | ✅ | Digital Crown press | 〃 |
+| Beats Fit Pro | ✅ | Button press | Per Apple's Spatial Audio docs (not tested) |
+| AirPods (1st / 2nd generation) | ❌ | — | No head-tracking sensors |
 
-- 에어팟 1·2세대에도 가속도계는 있지만 착용 감지·탭 인식용이라, 고개 방향과 기울기를 추적하는 자이로스코프가 없어요.
-- 기둥/크라운을 1·2·3번 누르면 오는 재생·다음·이전 신호를 클릭으로 바꿔 쓰는 방식이라, 위 기기의 버튼 누르기도 같은 방식으로 동작할 거예요.
-- 끄덕임·도리도리 같은 머리 제스처는 PodMouse가 센서 값으로 직접 인식해요. 그래서 Apple의 '머리 제스처'(전화 받기/거절)를 지원하지 않는 모델에서도 헤드 트래킹만 되면 쓸 수 있어요.
-- 내 에어팟이 되는지 확인하려면: 귀에 착용하고 **설정 탭 → 실시간 센서** 값이 움직이는지 보세요. 지원하지 않으면 메뉴바에 '헤드 트래킹을 쓸 수 없음'이 떠요.
-- Apple은 공간 음향 머리 추적을 Apple 실리콘 Mac에서 지원한다고 안내해요. 인텔 Mac은 테스트하지 않았어요.
+- AirPods 1st/2nd gen do have accelerometers, but only for ear detection and taps. They have no gyroscope to track head direction and tilt.
+- Clicks come from the play/next/previous signals sent by 1/2/3 presses of the stem or crown, so button presses on the devices above should work the same way.
+- Head gestures such as nod and shake are detected by PodMouse itself from the sensor data. They work on any head-tracking model, even ones without Apple's own head gestures (answering/declining calls).
+- To check your AirPods: put them in and see whether the values move under **Settings tab → Live Sensors**. If they're not supported, the menu bar shows "Head tracking unavailable".
+- Apple supports Spatial Audio head tracking on Macs with Apple silicon. Intel Macs haven't been tested.
 
-## 설치 (터미널)
+## Install (Terminal)
 
-터미널에 아래를 붙여넣으면 받아서 빌드하고 `/Applications`에 설치한 뒤 바로 실행해요.
+Paste this into Terminal. It downloads, builds and installs PodMouse to `/Applications`, then launches it.
 
 ```bash
 git clone https://github.com/tony1010-dev/PodMouse.git ~/PodMouse
@@ -62,121 +63,125 @@ cd ~/PodMouse
 ./install.sh
 ```
 
-`install.sh`가 하는 일
-- macOS 버전과 Swift 컴파일러(Command Line Tools)가 있는지 확인
-- 빌드 → `/Applications/PodMouse.app` 설치 → 실행
-- 설치된 기본 SDK가 컴파일러 버전과 안 맞으면(`this SDK is not supported by the compiler`) 다른 SDK로 자동 재시도
+What `install.sh` does:
+- Checks your macOS version and that a Swift compiler (Command Line Tools) is installed
+- Builds the app, installs `/Applications/PodMouse.app` and launches it
+- If the default SDK doesn't match your compiler (`this SDK is not supported by the compiler`), retries with your other installed SDKs
 
-> Command Line Tools가 없다고 나오면 `xcode-select --install` 로 먼저 설치하세요.
+> If it says the Command Line Tools are missing, run `xcode-select --install` first.
 
-### 업데이트
+### Update
 
 ```bash
 cd ~/PodMouse && git pull && ./install.sh
 ```
 
-### 삭제
+### Uninstall
 
 ```bash
 ~/PodMouse/install.sh uninstall
 rm -rf ~/PodMouse
 ```
 
-시스템 설정 → 개인정보 보호 및 보안 → 손쉬운 사용 목록에 남은 PodMouse 항목도 지워주세요.
+Also remove PodMouse from System Settings → Privacy & Security → Accessibility.
 
-### 직접 빌드
+### Build manually
 
 ```bash
-./build.sh            # build/PodMouse.app 생성
-./build.sh install    # /Applications 에 설치하고 실행
-SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk ./build.sh   # SDK 지정
+./build.sh            # creates build/PodMouse.app
+./build.sh install    # installs to /Applications and launches
+SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk ./build.sh   # pick an SDK
 ```
 
-개발자 인증서(Apple Development / Developer ID)가 있으면 자동으로 그걸로 서명해요. 없으면 ad-hoc 서명이라,
-다시 빌드할 때마다 손쉬운 사용 권한을 다시 켜야 할 수 있어요. 특정 인증서는 `PODMOUSE_SIGN_IDENTITY`로 지정할 수 있어요.
+If you have a developer certificate (Apple Development / Developer ID), it's used to sign the app automatically.
+Otherwise the app is signed ad hoc, and you may need to re-enable Accessibility access after every rebuild.
+Set `PODMOUSE_SIGN_IDENTITY` to choose a specific certificate.
 
-## 처음 실행
+## First launch
 
-실행하면 **PodMouse 창**이 떠요.
-- **시작하기**: 단계별 체크리스트 (직접 해보면 자동으로 체크됨)와 클릭 연습 영역
-- **조작법**: 모든 동작과 단축키 설명
-- **설정**: 감도, 제스처 인식 기준, 동작 연결, 실시간 센서 값
+The **PodMouse window** opens on launch:
+- **Get Started**: a step-by-step checklist (ticks itself off as you try it) and a click practice area
+- **Controls**: every action and shortcut explained
+- **Settings**: sensitivity, gesture thresholds, action assignments and live sensor values
 
-창을 닫아도 앱은 메뉴바에서 계속 돌아가요. 메뉴바 아이콘 → '사용 안내 열기'로 다시 열 수 있고,
-Finder나 Spotlight에서 PodMouse를 다시 실행해도 창이 열려요.
+Closing the window keeps the app running in the menu bar. Reopen it from the menu bar icon → "Open Guide…",
+or launch PodMouse again from Finder or Spotlight.
 
-처음 실행 시 허용할 권한
-1. **손쉬운 사용** — 커서 이동·클릭·키 입력 (시스템 설정 → 개인정보 보호 및 보안 → 손쉬운 사용)
-2. **동작 및 피트니스** — 에어팟을 귀에 끼면 물어봄
-3. **마이크 / 음성 인식** — 처음 음성 입력할 때 물어봄
+Permissions to allow:
+1. **Accessibility**: moving the cursor, clicking and typing (System Settings → Privacy & Security → Accessibility)
+2. **Motion & Fitness**: asked when you put your AirPods in
+3. **Microphone / Speech Recognition**: asked the first time you use voice input
 
-앱 언어는 설치하면 시스템 언어를 따라가요 (한국어가 아니면 영어). 설정 탭 → 일반 → **앱 언어**, 또는 메뉴바 → **언어 / Language**에서
-바꿀 수 있고, 바꾸면 음성 인식 언어도 같이 바뀌어요.
+The app language follows your system language on install (Korean if your system is Korean, otherwise English). Change it in
+Settings tab → General → **App language**, or menu bar → **언어 / Language**. Changing it also switches the speech
+recognition language.
 
-## 조작법
+## Controls
 
-| 입력 | 동작 |
+| Input | Action |
 |---|---|
-| 고개 좌우로 돌리기 / 위아래 | 커서 이동 |
-| ⌃⌥ , (Control+Option+쉼표) | 왼쪽 클릭 · 두 번 = 더블클릭 · 꾹 누르고 고개 움직이기 = 드래그 |
-| ⌃⌥ . (Control+Option+마침표) | 오른쪽 클릭 |
-| 에어팟 기둥 1번 누르기 | 왼쪽 클릭 |
-| 에어팟 기둥 2번 누르기 | 오른쪽 클릭 |
-| 에어팟 기둥 3번 누르기 | 음성 입력 시작/끝 |
+| Turn head left/right, up/down | Move the cursor |
+| ⌃⌥ , (Control+Option+Comma) | Left click · twice = double-click · hold and move your head = drag |
+| ⌃⌥ . (Control+Option+Period) | Right click |
+| Press AirPods stem once | Left click |
+| Press AirPods stem twice | Right click |
+| Press AirPods stem three times | Start/stop voice input |
 
-- 기둥 누르기는 **마우스 모드가 켜져 있을 때만** 클릭으로 바뀌어요. 꺼지면 음악 재생/정지로 돌아가요.
-- macOS는 왼쪽·오른쪽 에어팟 중 어느 쪽을 눌렀는지 알려주지 않아서, 누른 횟수로 구분해요.
-  1번 누르기는 에어팟이 2번 누르기인지 기다렸다 신호를 보내서 약 0.3~0.5초 늦게 클릭돼요.
-- 머리 제스처는 기본으로 꺼져 있어요. ⌃⌥G (또는 설정 → 머리 제스처)로 켜면 왼쪽 갸웃 = 음성 입력, 도리도리 = 마우스 모드 켜기/끄기가 동작하고, 고개 클릭은 설정에서 연결할 수 있어요.
+- Stem presses only become clicks **while mouse mode is on**. When it's off, they go back to play/pause.
+- macOS doesn't report which AirPod (left or right) was pressed, so presses are told apart by count.
+  AirPods wait to see whether a second press is coming before sending the signal, so a single press clicks about 0.3–0.5 s late.
+- Head gestures are off by default. Turn them on with ⌃⌥G (or Settings → Head Gestures) to get tilt left = voice input
+  and head shake = toggle mouse mode. You can assign clicks to head gestures in Settings.
 
-## 커서 이동 방식
+## Cursor modes
 
-- **조이스틱 (기본)**: 정면(⌃⌥R로 맞춘 방향)에서 고개를 살짝 기울이고 있으면 그쪽으로 계속 이동, 정면으로 돌아오면 멈춤.
-  많이 기울일수록 빨라지고, 멈춤 위치가 어긋나면 편한 자세에서 ⌃⌥ / 를 한 번 누르면 돼요.
-  설정에서 "⌃⌥ / 를 누르고 있을 때만 이동"을 켜면 키를 누르는 동안만 움직이고, 떼면 커서가 고정돼서 클릭할 때 흔들리지 않아요.
-- **절대**: 정면 = 화면 중앙, 고개 방향 = 커서 위치.
-- **상대**: 움직인 만큼 이동 (트랙패드처럼).
+- **Joystick (default)**: keep your head slightly turned away from forward (set with ⌃⌥R) and the cursor keeps moving
+  that way; face forward again to stop. The more you turn, the faster it goes. If the rest point drifts, press ⌃⌥ / once
+  in a comfortable pose. Turn on "Move only while holding ⌃⌥ /" in Settings to move only while the key is held. The cursor
+  then locks when you let go, so it doesn't wobble while you click.
+- **Absolute**: forward = screen center, head direction = cursor position.
+- **Relative**: the cursor moves as much as you move, like a trackpad.
 
-시작할 때: 노트북 정면을 보고 ⌃⌥R → 커서가 정중앙으로 가고 그 방향이 정면 기준이 돼요.
+To start, face your laptop and press ⌃⌥R. The cursor jumps to the center and that direction becomes "forward".
 
-## 단축키 (⌃ Control + ⌥ Option)
+## Shortcuts (⌃ Control + ⌥ Option)
 
-| 키 | 기능 |
+| Key | Function |
 |---|---|
-| ⌃⌥M | 마우스 모드 켜기/끄기 |
-| ⌃⌥ / | 지금 고개 위치를 멈춤 기준으로 (키 모드에선 누르는 동안 이동) |
-| ⌃⌥ , / ⌃⌥ . | 왼쪽 / 오른쪽 클릭 |
-| ⌃⌥V | 음성 입력 (탭 = 켜기/끄기, 길게 누르면 누르는 동안만 녹음) |
-| ⌃⌥R | 기준 자세 재설정 + 커서 화면 중앙 |
-| ⌃⌥D | 드래그 고정 시작/끝 |
-| ⌃⌥S | 스크롤 모드 (고개로 스크롤) |
-| ⌃⌥G | 머리 제스처 켜기/끄기 |
-| ⌃⌥= / ⌃⌥- | 감도 올리기/내리기 |
+| ⌃⌥M | Toggle mouse mode |
+| ⌃⌥ / | Make the current head position the rest point (key mode: move while held) |
+| ⌃⌥ , / ⌃⌥ . | Left / right click |
+| ⌃⌥V | Voice input (tap = on/off, hold = record while held) |
+| ⌃⌥R | Reset reference pose + center the cursor |
+| ⌃⌥D | Start/end drag lock |
+| ⌃⌥S | Scroll mode (scroll with your head) |
+| ⌃⌥G | Toggle head gestures |
+| ⌃⌥= / ⌃⌥- | Increase / decrease sensitivity |
 
-## 음성으로 코딩하기 (Claude Code / Codex)
+## Coding by voice (Claude Code / Codex)
 
-1. 터미널에서 `claude` 또는 `codex` 실행
-2. ⌃⌥V (또는 기둥 3번) → 말하기 → 다시 ⌃⌥V
-3. 인식된 문장이 포커스된 창에 붙여넣어짐
-   - 메뉴 → **음성 입력 대상**에서 터미널 앱을 고르면, 다른 창을 보고 있어도 그 앱으로 보냄
-   - **음성 입력 후 Enter 자동**을 켜면 바로 전송
-   - "엔터" / "전송"만 말하면 Enter, "취소"는 Esc
+1. Run `claude` or `codex` in Terminal
+2. ⌃⌥V (or stem ×3) → speak → ⌃⌥V again
+3. The recognized text is pasted into the focused window
+   - Pick your terminal app in the menu bar → **Voice Input Target** to send text there even while another window is in front
+   - Turn on **Auto Enter After Voice Input** to send right away
+   - Say just "enter" / "send" to press Enter, or "cancel" for Esc
 
-마이크는 macOS 기본 입력 장치를 써요. 에어팟 마이크로 하려면 제어 센터 → 사운드 입력에서 에어팟을 선택하세요.
+PodMouse uses the macOS default input device. To use the AirPods mic, select your AirPods under Control Center → Sound → Input.
 
-## 보정 팁
+## Calibration tips
 
-- 설정창의 **실시간 센서**에서 값이 움직이는지 먼저 확인하세요 (안 움직이면 에어팟을 다시 끼거나 블루투스 재연결).
-- 커서 방향이 반대면 **좌우/위아래 반전**, 갸웃 방향이 반대면 **갸웃 좌우 반전**.
-- 커서가 서서히 흐르면 **데드존**을 올리고 ⌃⌥R로 기준을 다시 잡으세요.
+- First check that the values move under **Live Sensors** in Settings. If they don't, reseat your AirPods or reconnect Bluetooth.
+- If the cursor moves the wrong way, use **Invert horizontal/vertical**. If tilt is detected backwards, use **Invert tilt**.
+- If the cursor slowly drifts, raise the **dead zone** and press ⌃⌥R to reset the reference.
 
-## 한계
+## Limitations
 
-- 헤드 트래킹 데이터는 **귀에 꼈을 때만** 나와요. 충전 케이스 안의 에어팟은 센서 값을 보내지 않고,
-  케이스 뚜껑 열림/닫힘도 공개 API로는 알 수 없어서 케이스 상태 마우스는 지원하지 않아요.
-- 귀 감지를 끄고 에어팟을 손에 쥐면 값이 나오는 경우도 있어요. 실시간 센서 화면에서 확인해 보세요.
-- 센서 업데이트는 약 25Hz라서 120Hz로 보간해 부드럽게 움직이게 했어요.
+- Head-tracking data only comes **while the AirPods are in your ears**. AirPods in the charging case don't send sensor
+  data, and the public APIs can't detect the case lid opening or closing, so using the case as a mouse isn't supported.
+- With automatic ear detection turned off, holding the AirPods in your hand sometimes produces data. Check it on the Live Sensors screen.
+- The sensors update at about 25 Hz, so movement is interpolated to 120 Hz to keep it smooth.
 
-## 라이선스
+## License
 
 [MIT](LICENSE)
