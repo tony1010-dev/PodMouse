@@ -106,8 +106,8 @@ struct SettingsView: View {
 
             Section(L("음성 입력 (Claude Code · Codex 등)", "Voice Input (Claude Code, Codex, etc.)")) {
                 Picker(L("인식 언어", "Recognition language"), selection: $settings.voiceLocale) {
-                    Text("English (US)").tag("en-US")
                     Text("한국어").tag("ko-KR")
+                    Text("English (US)").tag("en-US")
                     Text("日本語").tag("ja-JP")
                 }
                 Toggle(L("입력 후 Enter 자동으로 누르기 (바로 전송)", "Press Enter automatically after input (send right away)"), isOn: $settings.autoEnter)
