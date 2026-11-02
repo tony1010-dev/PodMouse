@@ -11,9 +11,9 @@ struct SettingsView: View {
         Form {
             Section(L("일반", "General")) {
                 Picker(L("앱 언어", "App language"), selection: Binding(get: { settings.language }, set: { settings.setLanguage($0) })) {
-                    Text(L("시스템 설정 따르기", "Same as system")).tag("system")
-                    Text("한국어").tag("ko")
                     Text("English").tag("en")
+                    Text("한국어").tag("ko")
+                    Text(L("시스템 설정 따르기", "Same as system")).tag("system")
                 }
             }
 
@@ -106,8 +106,8 @@ struct SettingsView: View {
 
             Section(L("음성 입력 (Claude Code · Codex 등)", "Voice Input (Claude Code, Codex, etc.)")) {
                 Picker(L("인식 언어", "Recognition language"), selection: $settings.voiceLocale) {
-                    Text("한국어").tag("ko-KR")
                     Text("English (US)").tag("en-US")
+                    Text("한국어").tag("ko-KR")
                     Text("日本語").tag("ja-JP")
                 }
                 Toggle(L("입력 후 Enter 자동으로 누르기 (바로 전송)", "Press Enter automatically after input (send right away)"), isOn: $settings.autoEnter)

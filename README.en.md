@@ -17,7 +17,7 @@ code by voice in Claude Code or Codex.
 - 🗣️ **Code by voice.** Press the stem three times (or ⌃⌥V) to dictate. The text goes straight into the terminal running Claude Code or Codex.
 - 🧭 **Easy to learn.** A step-by-step checklist ticks itself off as you try each step, and a practice area lets you test clicks.
 - ⚙️ **Fine-grained calibration.** Tune sensitivity, dead zone and gesture thresholds while watching live sensor values.
-- 🌐 **English / 한국어.** Follows your system language. Change it in Settings → App language or menu bar → Language.
+- 🌐 **English / 한국어.** Follows your system language on install. Change it in Settings → App language or menu bar → Language.
 
 ## Screenshots
 
@@ -112,7 +112,7 @@ Permissions to allow:
 2. **Motion & Fitness**: asked when you put your AirPods in
 3. **Microphone / Speech Recognition**: asked the first time you use voice input
 
-The app language follows your system language (Korean if your system is Korean, otherwise English). Change it in
+The app language follows your system language on install (Korean if your system is Korean, otherwise English). Change it in
 Settings tab → General → **App language**, or menu bar → **언어 / Language**. Changing it also switches the speech
 recognition language.
 

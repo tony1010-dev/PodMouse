@@ -122,7 +122,7 @@ final class Settings: ObservableObject {
     @Published var captureStem: Bool { didSet { d.set(captureStem, forKey: "captureStem") } }
 
     // 기타
-    /// 앱 언어: "system"(시스템 따르기) / "ko" / "en"
+    /// 앱 언어: "system"(기본, 시스템 따르기) / "en" / "ko"
     @Published var language: String { didSet { d.set(language, forKey: "language") } }
     var isKorean: Bool { language == "ko" || (language == "system" && Settings.systemIsKorean) }
     static var systemIsKorean: Bool { Locale.preferredLanguages.first?.hasPrefix("ko") ?? false }
